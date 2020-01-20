@@ -44,12 +44,18 @@ namespace BangazonSite.Models
 
         [Display(Name = "Local Delivery")]
         public bool LocalDelivery { get; set; }
+        //Creating Connection to product type
+        public int ProductTypeId { get; set; }
+        public bool isArchived { get; set; }
+        public ProductType ProductType {get;set;}
+        public List<OrderProduct> OrderProducts { get; set; }
 
 
-        
 
-        
-       
+
+
+
+
         // Need to add: relationships between ProductType and Product and relationships between OrderProducts and Products
 
 

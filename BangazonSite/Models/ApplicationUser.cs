@@ -20,6 +20,8 @@ namespace BangazonSite.Models
         [Required]
         [Display(Name = "Street Address")]
         public string StreetAddress { get; set; }
+        public ICollection<Order> Orders { get; set; }
+        public ICollection<PaymentType> PaymentTypes { get; set; }
 
         public ICollection<Product> Products { get; set; }
 
