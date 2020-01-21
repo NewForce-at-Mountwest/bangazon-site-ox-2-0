@@ -4,14 +4,16 @@ using BangazonSite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BangazonSite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200121161117_Name-to-type")]
+    partial class Nametotype
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,7 +94,7 @@ namespace BangazonSite.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -114,7 +116,7 @@ namespace BangazonSite.Migrations
                         new
                         {
                             PaymentTypeId = 1,
-                            Name = "American Express",
+                            Type = "American Express",
                             UserId = "00000000-ffff-ffff-ffff-ffffffffffff",
                             acctNumber = "123456789",
                             isActive = true
@@ -122,7 +124,7 @@ namespace BangazonSite.Migrations
                         new
                         {
                             PaymentTypeId = 2,
-                            Name = "Visa",
+                            Type = "Visa",
                             UserId = "00000000-ffff-ffff-ffff-ffffffffffff",
                             acctNumber = "0987654321",
                             isActive = false
@@ -130,7 +132,7 @@ namespace BangazonSite.Migrations
                         new
                         {
                             PaymentTypeId = 3,
-                            Name = "MasterCard",
+                            Type = "MasterCard",
                             UserId = "00000000-ffff-ffff-ffff-ffffffffffff",
                             acctNumber = "6942069",
                             isActive = true
@@ -627,13 +629,13 @@ namespace BangazonSite.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8ca8238d-4d1a-4fc9-99a1-cc0588013309",
+                            ConcurrencyStamp = "f86d83b5-2a7d-4316-886d-2e470e7e67ac",
                             Email = "admin@admin",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN",
                             NormalizedUserName = "DADDY",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGlAzChu6uLKOF6iwlrjkkV922qgarnnXDHYObat/rdu/VcRn3x2hpccI8sVbQz8Bw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMdoJZq7tYChnnH3C/LT8UwHAAgp6ZvjwnTFPg3IYs8YwcFUfX9iIbtOfSi7CAnD9g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TwoFactorEnabled = false,
