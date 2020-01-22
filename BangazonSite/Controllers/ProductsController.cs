@@ -27,12 +27,36 @@ namespace BangazonSite.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
 
-        // GET: Products
-        public async Task<IActionResult> Index()
+          // GET: Products
+        public async Task<IActionResult> Index(string searchString, string searchBy)
         {
-            var user = await GetCurrentUserAsync();
+            ViewData["searchBy"] = searchBy;
+            ViewData["CurrentFilter"] = searchString;
 
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User).Where(s => s.User == user);
+                var user = await GetCurrentUserAsync();
+
+                var applicationDbContext = _context.Product.Where(p => p.isArchived == true).Include(p => p.ProductType).Include(p => p.User).Where(s => s.User == user);
+
+                //If user enters a string into the search input field in the navbar - adding a where clause to include products whose name contains string.
+                if (!String.IsNullOrEmpty(searchString))
+            {
+                switch (searchBy)
+
+                {
+
+                    case "1":
+                        applicationDbContext = _context.Product.Where(p => p.City.Contains(searchString)).Include(p => p.ProductType).Include(p => p.User);
+                        break;
+                    case "2":
+                        applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchString)).Include(p => p.ProductType).Include(p => p.User);
+                        break;
+                    default:
+                        applicationDbContext = _context.Product.Where(p => p.Title.Contains(searchString) || p.City.Contains(searchString)).Include(p => p.ProductType).Include(p => p.User);
+                        break;
+                }
+            }
+            //This switch case statement uses the searchBy parameter which is in _Layout.cs and tells us what we want to be searching through.
+
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -61,6 +85,7 @@ namespace BangazonSite.Controllers
         {
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Name");
             //ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName");
+
             return View();
         }
 
