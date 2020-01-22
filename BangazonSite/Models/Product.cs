@@ -47,8 +47,10 @@ namespace BangazonSite.Models
         //Creating Connection to product type
         public int ProductTypeId { get; set; }
         public bool isArchived { get; set; }
-        public ProductType ProductType {get;set;}
+        public ProductType ProductType { get; set; }
         public List<OrderProduct> OrderProducts { get; set; }
+
+        public string Error { get; set; }
 
 
 

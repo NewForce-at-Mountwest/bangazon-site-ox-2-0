@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -13,19 +16,19 @@
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BangazonSite</a>
 
-               
-                
-                    <form asp-controller="Products" asp-action="Index" method="get">
-                        <input type="text" placeholder="Search products" name="searchString" value="@ViewData["currentFilter"]" />
-                        <input type="submit" value="Search" class="btn btn-sm btn-info" />
-                        <select class="search-by" name="searchBy" value="@ViewData["searchBy"]">
-                            <option value="0">Both</option>
-                            <option value="1">Local</option>
-                            <option value="2">Product</option>
-                        </select>
-                    </form>
-                
-                
+
+
+                <form asp-controller="Products" asp-action="Index" method="get">
+                    <input type="text" placeholder="Search products" name="searchString" value="@ViewData["currentFilter"]" />
+                    <input type="submit" value="Search" class="btn btn-sm btn-info" />
+                    <select class="search-by" name="searchBy" value="@ViewData["searchBy"]">
+                        <option value="0">Both</option>
+                        <option value="1">Local</option>
+                        <option value="2">Product</option>
+                    </select>
+                </form>
+
+
 
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -38,9 +41,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Sell</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Sell</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>

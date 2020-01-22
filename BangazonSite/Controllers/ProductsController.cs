@@ -41,9 +41,7 @@ namespace BangazonSite.Controllers
                 if (!String.IsNullOrEmpty(searchString))
             {
                 switch (searchBy)
-
                 {
-
                     case "1":
                         applicationDbContext = _context.Product.Where(p => p.City.Contains(searchString)).Include(p => p.ProductType).Include(p => p.User);
                         break;
@@ -103,10 +101,22 @@ namespace BangazonSite.Controllers
 
             if (ModelState.IsValid)
             {
+                //If the user has not entered a city but local delivery is checked, return back to the view with an error
+                if (product.LocalDelivery == true && product.City == null)
+                {
+                    product.Error = new string("You have select Local Delivery, please enter a City");
+                    return View(product);
+
+                }
+            }
+
+            else if (ModelState.IsValid)
+            {
                 product.UserId = user.Id;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = product.Id });
+
             }
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Name", product.ProductTypeId);
             //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", product.User);
