@@ -70,8 +70,17 @@ namespace BangazonSite.Controllers
             return View(product);
         }
 
-        // GET: Products/Create
-        public IActionResult Create()
+		// GET: Products/Category
+
+		public async Task<IActionResult> Category(int? id)
+		{
+			var applicationDbContext = await _context.Product.Include(p => p.ProductType).Include(p =>p.User).ToListAsync();
+			var SortedProducts = applicationDbContext.Where(p => p.ProductTypeId == id);
+			return View(SortedProducts);
+		}
+
+		// GET: Products/Create
+		public IActionResult Create()
         {
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "ProductTypeId");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
