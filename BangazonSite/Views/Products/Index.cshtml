@@ -92,7 +92,7 @@ else
                         @Html.DisplayFor(modelItem => item.isArchived)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ProductType.ProductTypeId)
+                        <a asp-action="category" asp-route-id="@item.ProductTypeId">@Html.DisplayFor(modelItem => item.ProductType.Name)</a>
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
