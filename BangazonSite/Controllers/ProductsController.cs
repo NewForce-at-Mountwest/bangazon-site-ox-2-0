@@ -83,8 +83,8 @@ namespace BangazonSite.Controllers
         {
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Name");
             //ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName");
-
-            return View();
+            Product product = new Product();
+            return View(product);
         }
 
         // POST: Products/Create
@@ -104,7 +104,7 @@ namespace BangazonSite.Controllers
                 //If the user has not entered a city but local delivery is checked, return back to the view with an error
                 if (product.LocalDelivery == true && product.City == null)
                 {
-                    product.Error = new string("You have select Local Delivery, please enter a City");
+                    product.Error = new string("You have selected Local Delivery, please enter a City");
                     return View(product);
 
                 }
