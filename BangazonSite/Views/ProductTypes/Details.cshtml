@@ -1,0 +1,44 @@
+﻿@model BangazonSite.Models.ProductType
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4> @Html.DisplayFor(model => model.Name)</h4>
+    <hr />
+
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Price
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            <tr>
+                <td> @Html.ActionLink(item.Title, "Details", "Products", new { Id = item.Id }, null)</td>
+                <td>@Html.DisplayFor(product => item.Quantity)</td>
+                <td>@Html.DisplayFor(product => item.Price)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div>
+    <a asp-action="Index">View All Categories</a> |
+    <span>@Html.ActionLink("View All Products", "Index", "Products")</span>
+</div>
