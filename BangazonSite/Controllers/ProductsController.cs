@@ -27,18 +27,18 @@ namespace BangazonSite.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
 
-          // GET: Products
+        // GET: Products
         public async Task<IActionResult> Index(string searchString, string searchBy)
         {
             ViewData["searchBy"] = searchBy;
             ViewData["CurrentFilter"] = searchString;
 
-                var user = await GetCurrentUserAsync();
+            var user = await GetCurrentUserAsync();
 
-                var applicationDbContext = _context.Product.Where(p => p.isArchived == true).Include(p => p.ProductType).Include(p => p.User).Where(s => s.User == user);
+            var applicationDbContext = _context.Product.Where(p => p.isArchived == true).Include(p => p.ProductType).Include(p => p.User).Where(s => s.User == user);
 
-                //If user enters a string into the search input field in the navbar - adding a where clause to include products whose name contains string.
-                if (!String.IsNullOrEmpty(searchString))
+            //If user enters a string into the search input field in the navbar - adding a where clause to include products whose name contains string.
+            if (!String.IsNullOrEmpty(searchString))
             {
                 switch (searchBy)
                 {
@@ -108,15 +108,13 @@ namespace BangazonSite.Controllers
                     return View(product);
 
                 }
-            }
-
-            else if (ModelState.IsValid)
-            {
-                product.UserId = user.Id;
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = product.Id });
-
+                else
+                {
+                    product.UserId = user.Id;
+                    _context.Add(product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", new { id = product.Id });
+                }
             }
             ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Name", product.ProductTypeId);
             //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", product.User);
