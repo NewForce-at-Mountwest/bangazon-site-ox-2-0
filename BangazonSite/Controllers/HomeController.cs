@@ -21,7 +21,7 @@ namespace BangazonSite.Controllers
 			_context = context;
 		}
 
-		// GET: Products
+		// home products get
 		public async Task<IActionResult> Index()
 		{
 			var applicationDbContext = await _context.Product.Include(p => p.ProductType).Include(p => p.User)
@@ -29,6 +29,8 @@ namespace BangazonSite.Controllers
 			var currentProducts = applicationDbContext.Where(p => !p.isArchived);
 			return View(currentProducts);
 		}
+
+		// home product details
 
 		public async Task<IActionResult> Details(int? id)
 		{
