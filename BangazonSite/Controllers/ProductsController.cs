@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BangazonSite.Data;
 using BangazonSite.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace BangazonSite.Controllers
 {
@@ -14,26 +15,33 @@ namespace BangazonSite.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public ProductsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-          // GET: Products
+        // Private method to get current user
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+
+        // GET: Products
         public async Task<IActionResult> Index(string searchString, string searchBy)
         {
             ViewData["searchBy"] = searchBy;
             ViewData["CurrentFilter"] = searchString;
 
-            var applicationDbContext = _context.Product.Where(p => p.isArchived == true).Include(p => p.ProductType).Include(p => p.User);
+            var user = await GetCurrentUserAsync();
+
+            var applicationDbContext = _context.Product.Where(p => p.isArchived == true).Include(p => p.ProductType).Include(p => p.User).Where(s => s.User == user);
 
             //If user enters a string into the search input field in the navbar - adding a where clause to include products whose name contains string.
             if (!String.IsNullOrEmpty(searchString))
             {
                 switch (searchBy)
-
                 {
-
                     case "1":
                         applicationDbContext = _context.Product.Where(p => p.City.Contains(searchString)).Include(p => p.ProductType).Include(p => p.User);
                         break;
@@ -82,9 +90,10 @@ namespace BangazonSite.Controllers
 		// GET: Products/Create
 		public IActionResult Create()
         {
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "ProductTypeId");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Name");
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "FirstName");
+            Product product = new Product();
+            return View(product);
         }
 
         // POST: Products/Create
@@ -94,14 +103,30 @@ namespace BangazonSite.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,DateCreated,Description,Title,Price,Quantity,UserId,City,ProductImage,LocalDelivery,ProductTypeId,isArchived")] Product product)
         {
+            ModelState.Remove("User");
+            ModelState.Remove("UserId");
+
+            var user = await GetCurrentUserAsync();
+
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //If the user has not entered a city but local delivery is checked, return back to the view with an error
+                if (product.LocalDelivery == true && product.City == null)
+                {
+                    product.Error = new string("You have selected Local Delivery, please enter a City");
+                    return View(product);
+
+                }
+                else
+                {
+                    product.UserId = user.Id;
+                    _context.Add(product);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", new { id = product.Id });
+                }
             }
-            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "ProductTypeId", product.ProductTypeId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", product.UserId);
+            ViewData["ProductTypeId"] = new SelectList(_context.ProductType, "ProductTypeId", "Name", product.ProductTypeId);
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", product.User);
             return View(product);
         }
 
